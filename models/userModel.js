@@ -15,18 +15,24 @@ const userSchema=mongoose.Schema({
     hashed_password:{
         type:String,
         requried:"password is required",
-        salt:String,
-        role:{
-            type:Number,
-            default:0
-        }
+        
+        
 
     },
+    salt:String,
+    role:{
+            type:Number,
+            default:0
+        },
     email:{
         type:String,
         trim:true,
         required:"Email is required",
         unique:"Email already exists"
+    },
+    isVerified:{
+        type:Boolean,
+        default:false,
     }
 },{timestamps:true})
 userSchema.virtual('password')
@@ -42,12 +48,16 @@ userSchema.virtual('password')
     }
 )
 userSchema.methods={
+    authenticate:function(plainText){
+        return this.passwordEncrypt(plainText)==this.hashed_password
+    },
     passwordEncrypt:function(password){
         if(!password){
             return ''
         }
         try{
-            return crypto.createHmac('sha1',this.salt)
+            return crypto
+            .createHmac('sha1',this.salt)
             .update(password)
             .digest('hex')
         }
@@ -56,4 +66,4 @@ userSchema.methods={
         }
     }
 }
-exports.userModel=mongoose.model("user",userSchema)
+module.exports=mongoose.model("user",userSchema)

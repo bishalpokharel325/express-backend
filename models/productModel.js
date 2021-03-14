@@ -24,6 +24,10 @@ const productSchema=mongoose.Schema({
         required:true,
         ref:'category'
     },
+    image:{
+        type:String,
+        required:true
+    }
 
 },{timestamps:true})
 exports.productModel=mongoose.model("products",productSchema)

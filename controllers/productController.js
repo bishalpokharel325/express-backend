@@ -1,10 +1,19 @@
 const mongoose=require('mongoose')
 const {productModel}=require('../models/productModel')
 exports.postProduct=(req,res)=>{
-    const newproduct=new productModel(req.body)
+    console.log(req)
+    const newproduct=new productModel({
+        image:req.file.path,
+        title:req.body.title,
+        description:req.body.description,
+        price:req.body.price,
+        quantity:req.body.quantity,
+        rating:req.body.rating,
+        category:req.body.category
+    })
     .save()
-    .then((data)=>{
-        res.json(data)
+    .then((products)=>{
+        res.json(products)
     })
 }
 exports.getProduct=(req,res)=>{
@@ -42,8 +51,14 @@ exports.getProduct=(req,res)=>{
         })
     }
     all_products.sort({createdAt:-1})
-    .then((data)=>{
-        res.json(data)
+    .then((products)=>{
+        setTimeout(()=>{
+             res.json({products})
+        },2000)
+       
+    })
+    .catch((error)=>{
+        res.json({message:error})
     })
 }
 
